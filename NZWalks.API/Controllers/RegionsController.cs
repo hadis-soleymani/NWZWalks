@@ -59,15 +59,22 @@ namespace NZWalks.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] AddRegionRequestDto addRegionRequestDto)
         {
-            //map or convert dto to domain model
-            var regionDomainModel = mapper.Map<Region>(addRegionRequestDto);
+            if (ModelState.IsValid)
+            {
+                //map or convert dto to domain model
+                var regionDomainModel = mapper.Map<Region>(addRegionRequestDto);
 
-            regionDomainModel = await regionRepository.CreateAsync(regionDomainModel);
+                regionDomainModel = await regionRepository.CreateAsync(regionDomainModel);
 
-            //map domain modle back to DTO
-            var regionDto = mapper.Map<RegionDto>(regionDomainModel);
+                //map domain modle back to DTO
+                var regionDto = mapper.Map<RegionDto>(regionDomainModel);
 
-            return CreatedAtAction(nameof(GetById), new { id = regionDto.Id }, regionDto);
+                return CreatedAtAction(nameof(GetById), new { id = regionDto.Id }, regionDto);
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
         }
         #endregion
 
@@ -79,15 +86,22 @@ namespace NZWalks.API.Controllers
 
         public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateRegionRequestDto updateRegionRequestDto)
         {
-            //map Dto to domain model
-            var regionDomainModel = mapper.Map<Region>(updateRegionRequestDto);
-
-            regionDomainModel = await regionRepository.UpdateAsync(id, regionDomainModel);
-            if (regionDomainModel == null)
+            if (ModelState.IsValid)
             {
-                return NotFound();
+                //map Dto to domain model
+                var regionDomainModel = mapper.Map<Region>(updateRegionRequestDto);
+
+                regionDomainModel = await regionRepository.UpdateAsync(id, regionDomainModel);
+                if (regionDomainModel == null)
+                {
+                    return NotFound();
+                }
+                return Ok(mapper.Map<RegionDto>(regionDomainModel));
             }
-            return Ok(mapper.Map<RegionDto>(regionDomainModel));
+            else
+            {
+                return BadRequest(ModelState);
+            }
         }
         #endregion
 
