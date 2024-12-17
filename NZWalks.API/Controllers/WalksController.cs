@@ -26,15 +26,22 @@ namespace NZWalks.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] AddWalkRequestDto addWalkRequestDto)
         {
-            //map Dto to domain model
-            var walkDomainModel = mapper.Map<Walk>(addWalkRequestDto);
+            if (ModelState.IsValid)
+            {
+                //map Dto to domain model
+                var walkDomainModel = mapper.Map<Walk>(addWalkRequestDto);
 
-            walkDomainModel = await walkRepository.CreateAsync(walkDomainModel);
+                walkDomainModel = await walkRepository.CreateAsync(walkDomainModel);
 
-            //map domain model to Dto
-            var walkDto = mapper.Map<WalkDto>(walkDomainModel);
+                //map domain model to Dto
+                var walkDto = mapper.Map<WalkDto>(walkDomainModel);
 
-            return CreatedAtAction(nameof(GetById), new { id = walkDto.Id }, walkDto);
+                return CreatedAtAction(nameof(GetById), new { id = walkDto.Id }, walkDto);
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
         }
         #endregion
 
@@ -75,15 +82,22 @@ namespace NZWalks.API.Controllers
 
         public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateWalkRequestDto updateWalkRequestDto)
         {
-            //map Dto to domain model
-            var walkDomainModel = mapper.Map<Walk>(updateWalkRequestDto);
-
-            walkDomainModel = await walkRepository.UpdateAsync(id, walkDomainModel);
-            if (walkDomainModel == null)
+            if (ModelState.IsValid)
             {
-                return NotFound();
+                //map Dto to domain model
+                var walkDomainModel = mapper.Map<Walk>(updateWalkRequestDto);
+
+                walkDomainModel = await walkRepository.UpdateAsync(id, walkDomainModel);
+                if (walkDomainModel == null)
+                {
+                    return NotFound();
+                }
+                return Ok(mapper.Map<WalkDto>(walkDomainModel));
             }
-            return Ok(mapper.Map<WalkDto>(walkDomainModel));
+            else
+            {
+                return BadRequest(ModelState);
+            }
         }
         #endregion
 
