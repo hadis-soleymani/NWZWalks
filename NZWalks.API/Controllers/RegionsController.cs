@@ -31,9 +31,7 @@ namespace NZWalks.API.Controllers
         public async Task<IActionResult> GetAll()
         {
             var result = await regionRepository.GetAllAsync();
-            var regionsDto = mapper.Map<List<RegionDto>>(result);
-
-            return Ok(regionsDto);
+            return Ok(mapper.Map<List<RegionDto>>(result));
         }
         #endregion
 
