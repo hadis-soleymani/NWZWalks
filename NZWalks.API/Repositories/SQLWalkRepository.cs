@@ -51,7 +51,7 @@ namespace NZWalks.API.Repositories
 
             existingWalk.Name = walk.Name;
             existingWalk.Description = walk.Description;
-            existingWalk.LenghtInKm = walk.LenghtInKm;
+            existingWalk.LengthInKm = walk.LengthInKm;
             existingWalk.RegionId = walk.RegionId;
             existingWalk.DifficultyId = walk.DifficultyId;
             existingWalk.WalkImageUrl = walk.WalkImageUrl;
