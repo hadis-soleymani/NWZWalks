@@ -26,6 +26,7 @@ namespace NZWalks.API.Repositories
 
             var urlFilePath = $"{httpContextAccessor.HttpContext.Request.Scheme}://{httpContextAccessor.HttpContext.Request.Host}{httpContextAccessor.HttpContext.Request.PathBase}/Images/{image.FileName}{image.FileExtention}";
 
+            image.FilePath = urlFilePath;
             await dbContext.Images.AddAsync(image);
             await dbContext.SaveChangesAsync();
 
