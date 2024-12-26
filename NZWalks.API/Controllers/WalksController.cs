@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using NZWalks.API.Models.Domain;
 using NZWalks.API.Models.DTO;
 using NZWalks.API.Repositories;
+using System.Net;
 
 namespace NZWalks.API.Controllers
 {
@@ -45,9 +46,20 @@ namespace NZWalks.API.Controllers
         public async Task<IActionResult> GetAll([FromQuery] string? filterOn, [FromQuery] string? filterQuery,
             [FromQuery] string? sortBy, [FromQuery] bool? isAscending, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 1000)
         {
-            var walksDomainModel = await walkRepository.GetAllAsync(filterOn, filterQuery, sortBy, isAscending ?? true, pageNumber, pageSize);
+            try
+            {
+                throw new Exception("this is error");
 
-            return Ok(mapper.Map<List<WalkDto>>(walksDomainModel));
+                var walksDomainModel = await walkRepository.GetAllAsync(filterOn, filterQuery, sortBy, isAscending ?? true, pageNumber, pageSize);
+
+                return Ok(mapper.Map<List<WalkDto>>(walksDomainModel));
+            }
+            catch (Exception ex)
+            {
+                return Problem("Something went wrong", null, (int)HttpStatusCode.InternalServerError);
+                throw;
+            }
+
         }
         #endregion
 
