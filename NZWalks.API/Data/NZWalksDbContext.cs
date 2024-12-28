@@ -18,6 +18,8 @@ namespace NZWalks.API.Data
 
         public DbSet<Image> Images { get; set; }
 
+        public DbSet<Country> Countries { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
